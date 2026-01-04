@@ -1,0 +1,91 @@
+1. Start a Docker Container
+
+Start a container using the official ROS Noetic Desktop Full image:
+
+docker run -it --rm osrf/ros-noetic-desktop-full
+
+2. Install Required ROS Packages and Dependencies
+
+Inside the container, install ROS packages, Python, and supporting libraries:
+
+sudo apt update
+sudo apt install -y \
+    ros-noetic-desktop-full \
+    ros-noetic-move-base \
+    ros-noetic-slam-gmapping \
+    ros-noetic-turtlebot3 \
+    ros-noetic-turtlebot3-gazebo \
+    ros-noetic-multirobot-map-merge \
+    ros-noetic-explore-lite \
+    ros-noetic-dwa-local-planner \
+    ros-noetic-amcl \
+    ros-noetic-base-local-planner \
+    ros-noetic-map-server \
+    ros-noetic-navfn \
+    libgoogle-glog-dev \
+    python3-pip \
+    python-is-python3 \
+    python3.9
+
+3. Set Up Your Catkin Workspace
+
+Create and navigate to your catkin workspace:
+
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws
+
+4. Clone Required Repositories
+
+Clone all necessary repositories for simulation, object detection, and task allocation:
+
+# YOLOv5 for object detection
+git clone https://github.com/ultralytics/yolov5.git
+
+# Warehouse simulation environments
+git clone https://github.com/aws-robotics/aws-robomaker-small-warehouse-world
+git clone https://github.com/wh200720041/warehouse_simulation_toolkit
+
+5. Install Python Dependencies
+# YOLOv5 requirements
+cd ~/yolov5
+pip install -r requirements.txt
+
+# Task Allocation module requirements
+cd ~/catkin_ws/src/Task_Allocation
+python3.9 -m pip install -r requirements.txt
+
+6. Build Your Catkin Workspace
+cd ~/catkin_ws
+catkin_make
+
+7. Launch Frontier Exploration
+
+Start multiple TurtleBots to explore the environment:
+
+roslaunch ~/catkin_ws/src/multiple_turtlebot3/launch/frontier_exploration/main.launch
+
+
+After exploration and when the map in RViz looks satisfactory, save the generated map in a new terminal:
+
+cd ~/catkin_ws/multiple_turtlebot3/map
+rosrun map_server map_saver
+
+8. Merge YOLO Detection Results
+
+Run the YOLO result merging script:
+
+cd ~/catkin_ws/multiple_turtlebot3
+python script/merge_db.py
+
+9. Run Multi-Robot Navigation
+
+Close the previous frontier exploration launch and start multi-robot navigation using D* for global planning and DWA for local planning:
+
+roslaunch multiple_turtlebot3 multiple_turtlebot3.launch
+
+10. Start the LLM Task Allocation Interface
+
+Finally, launch the LLM-based task allocation interface:
+
+cd ~/catkin_ws/Task_Allocation
+python3.9 Interface.py
