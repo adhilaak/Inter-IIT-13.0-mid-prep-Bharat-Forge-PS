@@ -1,0 +1,24 @@
+<launch>
+  <!--- Run AMCL -->
+  <arg name="robot_name" />
+  <include file="$(find multiple_turtlebot3)/launch/amcl_diff.launch">
+    <arg name="robot_name" value="$(arg robot_name)" />
+  </include>
+
+  <!-- Define your move_base node -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_global_planner" value="path_planner/PathPlanner" />
+    <rosparam file="$(find multiple_turtlebot3)/param/graph_planner_params.yaml" command="load" />
+    <param name="base_local_planner" value="dwa_local_planner/DWAPlannerROS" />
+
+    <rosparam file="$(find multiple_turtlebot3)/param/costmap_common_params_waffle_$(arg robot_name).yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find multiple_turtlebot3)/param/costmap_common_params_waffle_$(arg robot_name).yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find multiple_turtlebot3)/param/local_costmap_params_$(arg robot_name).yaml" command="load" />
+    <rosparam file="$(find multiple_turtlebot3)/param/global_costmap_params_$(arg robot_name).yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find turtlebot3_navigation)/param/dwa_local_planner_params_waffle.yaml" command="load" />
+    <param name="DWAPlannerROS/min_vel_x" value="0.0" if="false" />
+    <remap from="map" to="/map" />
+  </node>
+</launch>
+<!-- vi: set et sw=2: -->

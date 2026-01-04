@@ -1,0 +1,89 @@
+<launch>
+  <!-- No namespace here as we will share this description.
+       Access with slash at the beginning -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_waffle.urdf.xacro" />
+
+
+  <!-- BEGIN ROBOT 1-->
+  <group ns="robot1">
+    <arg name="robot_name" value="robot1" />
+    <arg name="x" value="0.5" />
+    <arg name="y" value="0.5" />
+    <arg name="z" value="0" />
+    <arg name="yaw" value="0" />
+
+    <param name="tf_prefix" value="$(arg robot_name)_tf" />
+    <param name="amcl/initial_pose_x" value="$(arg x)" />
+    <param name="amcl/initial_pose_y" value="$(arg y)" />
+
+    <include file="$(find multiple_turtlebot3)/launch/move_base.launch">
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+    <include file="$(find multiple_turtlebot3)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x $(arg x) -y $(arg y) -z $(arg z)" />
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+	<!--<node pkg="multiple_turtlebot3" type="yolo_localization.py" name="yolo3d" args="" />-->
+  </group>
+
+  <!-- BEGIN ROBOT 2-->
+  <group ns="robot2">
+    <arg name="robot_name" value="robot2" />
+    <arg name="x" value="-0.5" />
+    <arg name="y" value="0.5" />
+    <arg name="z" value="0" />
+    <arg name="yaw" value="0" />
+
+    <param name="tf_prefix" value="$(arg robot_name)_tf" />
+    <param name="amcl/initial_pose_x" value="$(arg x)" />
+    <param name="amcl/initial_pose_y" value="$(arg y)" />
+    <include file="$(find multiple_turtlebot3)/launch/move_base.launch">
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+    <include file="$(find multiple_turtlebot3)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x $(arg x) -y $(arg y) -z $(arg z)" />
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+  </group>
+
+  <!-- BEGIN ROBOT 2-->
+  <group ns="robot3">
+    <arg name="robot_name" value="robot3" />
+    <arg name="x" value="0.5" />
+    <arg name="y" value="-0.5" />
+    <arg name="z" value="0" />
+    <arg name="yaw" value="0" />
+
+    <param name="tf_prefix" value="$(arg robot_name)_tf" />
+    <param name="amcl/initial_pose_x" value="0.5" />
+    <param name="amcl/initial_pose_y" value="-0.5" />
+    <include file="$(find multiple_turtlebot3)/launch/move_base.launch">
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+    <include file="$(find multiple_turtlebot3)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x $(arg x) -y $(arg y) -z $(arg z)" />
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+  </group>
+
+  <!-- BEGIN ROBOT 4-->
+  <group ns="robot4">
+    <arg name="robot_name" value="robot4" />
+    <arg name="x" value="-0.5" />
+    <arg name="y" value="-0.5" />
+    <arg name="z" value="0" />
+    <arg name="yaw" value="0" />
+
+    <param name="tf_prefix" value="$(arg robot_name)_tf" />
+    <param name="amcl/initial_pose_x" value="$(arg x)" />
+    <param name="amcl/initial_pose_y" value="$(arg y)" />
+    <include file="$(find multiple_turtlebot3)/launch/move_base.launch">
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+    <include file="$(find multiple_turtlebot3)/launch/one_robot.launch" >
+      <arg name="init_pose" value="-x $(arg x) -y $(arg y) -z $(arg z)" />
+      <arg name="robot_name"  value="$(arg robot_name)" />
+    </include>
+  </group>
+</launch>
+<!-- vi: set et sw=2: -->

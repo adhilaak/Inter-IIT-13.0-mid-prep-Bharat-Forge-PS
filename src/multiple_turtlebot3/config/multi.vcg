@@ -1,0 +1,4 @@
+Robot Description: robot_description
+TF Prefix:         robot1_tf
+Tool\ 2D\ Nav\ GoalTopic=/robot1/move_base_simple/goal
+Tool\ 2D\ Pose\ EstimateTopic=/robot1/initialpose

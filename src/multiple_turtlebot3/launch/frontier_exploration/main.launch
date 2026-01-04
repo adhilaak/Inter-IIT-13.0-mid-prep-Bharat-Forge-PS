@@ -1,0 +1,38 @@
+<launch>
+  <param name="/use_sim_time" value="true" />
+
+  <env name="GAZEBO_MODEL_PATH" value="${GAZEBO_MODEL_PATH}:$(find warehouse_simulation)/models"/>
+  <env name="GAZEBO_RESOURCE_PATH" value="${GAZEBO_RESOURCE_PATH}:$(find warehouse_simulation)/models"/>
+
+
+  <!-- start world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!--<arg name="world_name" value="$(find multiple_turtlebot3)/worlds/warehouse1.world"/>-->
+    <!--<arg name="world_name" value="$(find multiple_turtlebot3)/worlds/warehouse2.world"/>-->
+    <arg name="world_name" value="$(find aws_robomaker_small_warehouse_world)/worlds/small_warehouse.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find multiple_turtlebot3)/rviz/frontier.rviz"
+   output="screen" />
+
+  <node pkg="multirobot_map_merge" type="map_merge" respawn="false" name="map_merge" output="screen">
+    <param name="robot_map_topic" value="map"/>
+    <param name="robot_namespace" value=""/>
+    <param name="merged_map_topic" value="map"/>
+    <param name="world_frame" value="world"/>
+    <param name="known_init_poses" value="true"/>
+    <param name="merging_rate" value="0.5"/>
+    <param name="discovery_rate" value="0.05"/>
+    <param name="estimation_rate" value="0.1"/>
+    <param name="estimation_confidence" value="1.0"/>
+  </node>
+
+  <!-- include our robots -->
+  <include file="$(find multiple_turtlebot3)/launch/frontier_exploration/robots.launch"/>
+</launch>
+<!-- vi: set et sw=2: -->

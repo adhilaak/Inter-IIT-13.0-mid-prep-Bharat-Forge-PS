@@ -1,0 +1,11 @@
+<launch>
+    <arg name="robot_name"/>
+    <arg name="init_pose"/>
+
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model $(arg robot_name) $(arg init_pose) -param /robot_description" respawn="false" output="screen" />
+
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher"
+	name="robot_state_publisher" respawn="true" output="screen" />
+</launch>
+<!-- vi: set et sw=2: -->
